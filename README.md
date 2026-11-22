@@ -1,26 +1,26 @@
-# GrooveManager
+﻿# GrooveManager
 
-Sistema em Python, executado no terminal, para catalogar acervos de mídias físicas
-(discos de vinil, CDs e fitas cassete). Projeto da disciplina de Orientação a
+Sistema em Python, executado no terminal, para catalogar acervos de mÃ­dias fÃ­sicas
+(discos de vinil, CDs e fitas cassete). Projeto da disciplina de OrientaÃ§Ã£o a
 Objetos (UnB FGA).
 
 ## Funcionalidades
 
-- Cadastrar mídias (vinil, CD ou fita cassete) com artista, ano, estado de
-  conservação e registro de compra
+- Cadastrar mÃ­dias (vinil, CD ou fita cassete) com artista, ano, estado de
+  conservaÃ§Ã£o e registro de compra
 - Visualizar o acervo
-- Ver a ficha técnica completa de uma mídia
-- Pesquisar a mídia na Wikipedia
+- Ver a ficha tÃ©cnica completa de uma mÃ­dia
+- Pesquisar a mÃ­dia na Wikipedia
 
 ## Conceitos de POO aplicados
 
-- **Herança e polimorfismo:** Vinil, CD e K7 herdam da classe abstrata Midia e
+- **HeranÃ§a e polimorfismo:** Vinil, CD e K7 herdam da classe abstrata Midia e
   implementam `exibir_ficha_tecnica()` cada um do seu jeito
-- **Composição:** cada mídia tem um RegistroCompra que só existe atrelado a ela
-- **Agregação:** o Artista existe de forma independente e pode estar ligado a
-  várias mídias
-- **Dependência:** BuscadorFichaTecnica recebe a mídia apenas como parâmetro
-- **Encapsulamento:** atributos privados, protegidos e públicos com @property
+- **ComposiÃ§Ã£o:** cada mÃ­dia tem um RegistroCompra que sÃ³ existe atrelado a ela
+- **AgregaÃ§Ã£o:** o Artista existe de forma independente e pode estar ligado a
+  vÃ¡rias mÃ­dias
+- **DependÃªncia:** BuscadorFichaTecnica recebe a mÃ­dia apenas como parÃ¢metro
+- **Encapsulamento:** atributos privados, protegidos e pÃºblicos com @property
 
 ## Como executar
 
@@ -33,8 +33,8 @@ Na pasta raiz do projeto:
     main.py
     models/   (Midia, Vinil, CD, K7, Artista, RegistroCompra, Acervo, BuscadorFichaTecnica)
     views/    (Menu)
-    extras/   (versão 2 da Midia, usada só para comparação)
+    extras/   (versÃ£o 2 da Midia, usada sÃ³ para comparaÃ§Ã£o)
 
 ## Diagrama UML
 
-Em breve.
+![Diagrama UML](GrooveManager_UML.png)
