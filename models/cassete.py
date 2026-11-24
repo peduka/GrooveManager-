@@ -28,6 +28,10 @@ class K7(Midia):
         return self.__artista
 
     @property
+    def registro_compra(self):
+        return self.__registro_compra
+
+    @property
     def estado_conservacao(self):
         return self.__estado_conservacao
 
@@ -45,6 +49,6 @@ class K7(Midia):
         print(f"Artista: {self.artista.nome}")
         print(f"Data de lançamento: {self.data_lancamento}")
         print(f"Estado de conservação: {self.estado_conservacao}")
-        print(f"Valor pago: R$ {self.__registro_compra.valor}")
-        print(f"Data de prensagem: {self.__registro_compra.data_prensagem}")
-        print(f"Local de prensagem: {self.__registro_compra.local_prensagem}")
+        print(f"Valor pago: R$ {self.registro_compra.valor:.2f}")
+        print(f"Data de prensagem: {self.registro_compra.data_prensagem}")
+        print(f"Local de prensagem: {self.registro_compra.local_prensagem}")

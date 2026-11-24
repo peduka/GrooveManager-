@@ -13,10 +13,6 @@ class Midia(ABC):
     def data_lancamento(self):
         pass
 
-    @abstractmethod
-    def exibir_ficha_tecnica(self):
-        pass
-
     @property
     @abstractmethod
     def artista(self):
@@ -27,5 +23,11 @@ class Midia(ABC):
     def estado_conservacao(self):
         pass
 
-    
+    @property
+    @abstractmethod
+    def registro_compra(self):
+        pass
 
+    @abstractmethod
+    def exibir_ficha_tecnica(self):
+        pass
