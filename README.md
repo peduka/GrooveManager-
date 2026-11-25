@@ -5,7 +5,7 @@ acervos de mídias físicas (discos de vinil, CDs e fitas cassete). Projeto da
 disciplina de Orientação a Objetos (UnB FGA).
 
 > Status: Desk App IV (versão final). Interface gráfica desktop com múltiplas
-> janelas, botões e estilos personalizados
+> janelas, botões e estilos personalizados (tema escuro *Dark Vinyl Studio*) e
 > persistência em banco de dados SQLite (`groovemanager.db`), criado
 > automaticamente na primeira execução.
 
@@ -79,7 +79,39 @@ erDiagram
         TEXT data_prensagem
         TEXT local_prensagem
     }
+```
 
-    ## Diagrama UML
+## Conceitos de POO aplicados
+
+- **Herança e polimorfismo:** `Vinil`, `CD` e `K7` herdam da classe abstrata
+  `Midia` e implementam `exibir_ficha_tecnica()` cada um do seu jeito; na
+  interface gráfica, `BotaoEstilizado` herda de `tk.Button`
+- **Composição:** cada mídia tem um `RegistroCompra` que só existe atrelado a ela
+- **Agregação:** o `Artista` existe de forma independente e pode estar ligado a
+  várias mídias; o `Acervo` também agrega mídias e artistas
+- **Associação:** o `Acervo` usa um `RepositorioSQLite` para persistir os dados,
+  e `InterfaceGrafica` recebe o `Acervo` para orquestrar a tela
+- **Dependência:** `BuscadorFichaTecnica` e `RepositorioSQLite` recebem ou criam
+  mídias apenas para usá-las
+- **Encapsulamento:** atributos privados, protegidos e públicos com `@property`
+
+## Como executar
+
+Na pasta raiz do projeto:
+
+    python main.py
+
+O arquivo `groovemanager.db` é criado ao lado do `main.py`. Para começar do zero,
+feche o programa e apague esse arquivo.
+
+## Estrutura
+
+    main.py
+    models/   (Midia, Vinil, CD, K7, Artista, RegistroCompra, Acervo,
+               BuscadorFichaTecnica, RepositorioSQLite)
+    views/    (InterfaceGrafica, BotaoEstilizado, Menu, dados_exemplo)
+    extras/   (versão 2 da Midia, usada só para comparação)
+
+## Diagrama UML
 
 ![Diagrama UML](GrooveManager_UML.png)
