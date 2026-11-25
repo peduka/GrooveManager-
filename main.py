@@ -2,7 +2,7 @@ from pathlib import Path
 
 from models.acervo import Acervo
 from models.repositorio import ErroRepositorio, RepositorioSQLite
-from views.menu import Menu
+from views.interface_grafica import InterfaceGrafica
 
 # O arquivo do banco fica ao lado do main.py e é criado sozinho na primeira vez
 CAMINHO_BANCO = Path(__file__).resolve().parent / "groovemanager.db"
@@ -17,7 +17,7 @@ def main():
         return
 
     try:
-        Menu(acervo).iniciar()
+        InterfaceGrafica(acervo).iniciar()
     finally:
         repositorio.fechar()
 
