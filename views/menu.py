@@ -4,14 +4,14 @@ from models.cd import CD
 from models.cassete import K7
 from models.registro_compra import RegistroCompra
 from models.buscador import BuscadorFichaTecnica
+from models.repositorio import ErroRepositorio
 from views.dados_exemplo import carregar_dados_exemplo
 
 
 class Menu:
 
-    def __init__(self):
-        self.acervo = Acervo()
-        self._exemplos_carregados = False
+    def __init__(self, acervo=None):
+        self.acervo = acervo if acervo is not None else Acervo()
 
     def iniciar(self):
         while True:
@@ -25,32 +25,42 @@ class Menu:
             print("7 - Listar Artistas")
             print("8 - Pesquisar Ficha Técnica na Wikipedia")
             print("9 - Carregar Dados de Exemplo")
-            print("10 - Sair")
+            print("10 - Consultar Banco de Dados (SQL)")
+            print("11 - Sair")
             escolha = input("Escolha uma opção: ").strip()
 
-            if escolha == "1":
-                self.cadastrar_midia()
-            elif escolha == "2":
-                print(self.acervo)
-            elif escolha == "3":
-                self.ver_detalhes()
-            elif escolha == "4":
-                self.buscar_midia()
-            elif escolha == "5":
-                self.editar_midia()
-            elif escolha == "6":
-                self.remover_midia()
-            elif escolha == "7":
-                print("\n" + self.acervo.listar_artistas())
-            elif escolha == "8":
-                self.pesquisar_online()
-            elif escolha == "9":
-                self.carregar_exemplos()
-            elif escolha == "10":
+            if escolha == "11":
                 print("Encerrando o sistema.")
                 break
-            else:
-                print("Opção inválida.")
+
+            try:
+                self._executar_opcao(escolha)
+            except ErroRepositorio as erro:
+                print(f"\nErro no banco de dados: {erro}")
+
+    def _executar_opcao(self, escolha):
+        if escolha == "1":
+            self.cadastrar_midia()
+        elif escolha == "2":
+            print(self.acervo)
+        elif escolha == "3":
+            self.ver_detalhes()
+        elif escolha == "4":
+            self.buscar_midia()
+        elif escolha == "5":
+            self.editar_midia()
+        elif escolha == "6":
+            self.remover_midia()
+        elif escolha == "7":
+            print("\n" + self.acervo.listar_artistas())
+        elif escolha == "8":
+            self.pesquisar_online()
+        elif escolha == "9":
+            self.carregar_exemplos()
+        elif escolha == "10":
+            self.consultar_banco()
+        else:
+            print("Opção inválida.")
 
     def _selecionar_indice_midia(self, acao):
         if not self.acervo._midias:
@@ -230,10 +240,21 @@ class Menu:
             buscador.pesquisar_wikipedia(midia_selecionada)
 
     def carregar_exemplos(self):
-        if self._exemplos_carregados:
-            print("\nDados de exemplo já carregados.")
+        adicionadas = carregar_dados_exemplo(self.acervo)
+        if adicionadas == 0:
+            print("\nOs dados de exemplo já estão no acervo.")
+        else:
+            print(f"\n{adicionadas} mídias de exemplo carregadas com sucesso!")
+
+    def consultar_banco(self):
+        tabelas = self.acervo.consultar_banco()
+        if tabelas is None:
+            print("\nO acervo não está ligado a um banco de dados.")
             return
 
-        carregar_dados_exemplo(self.acervo)
-        self._exemplos_carregados = True
-        print("\nDados de exemplo carregados com sucesso!")
+        print("\n===== Banco de Dados (SQLite) =====")
+        for nome_tabela, (colunas, linhas) in tabelas.items():
+            print(f"\nTabela {nome_tabela} ({len(linhas)} linhas)")
+            print("  " + " | ".join(colunas))
+            for linha in linhas:
+                print("  " + " | ".join(str(valor) for valor in linha))
