@@ -79,3 +79,7 @@ erDiagram
         TEXT data_prensagem
         TEXT local_prensagem
     }
+
+    ## Diagrama UML
+
+![Diagrama UML](GrooveManager_UML.png)
