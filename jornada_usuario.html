@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa da Jornada do Usuário — GrooveManager Desktop App</title>
+    <style>
+        :root {
+            --bg-main: #111116;
+            --bg-panel: #1a1a22;
+            --bg-card: #23232e;
+            --border: #333344;
+            --text-main: #f4f4f6;
+            --text-muted: #a6a6b8;
+            --accent: #e5a93c;
+            --phase-before: #3b82f6;
+            --phase-during: #e5a93c;
+            --phase-after: #10b981;
+            --pain: #ef4444;
+            --opp: #22c55e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            padding: 20px;
+            line-height: 1.45;
+        }
+
+        .wrapper {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        /* Cabeçalho */
+        .header {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px 24px;
+            margin-bottom: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: var(--accent);
+            color: #111116;
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 3px 9px;
+            border-radius: 4px;
+            letter-spacing: 0.6px;
+            margin-bottom: 6px;
+        }
+
+        .header h1 {
+            font-size: 1.55rem;
+            color: var(--accent);
+        }
+
+        .header p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Bloco da Persona */
+        .persona-card {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--accent);
+            border-radius: 12px;
+            padding: 16px 22px;
+            margin-bottom: 18px;
+            display: grid;
+            grid-template-columns: 260px 1fr 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .persona-profile {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .avatar {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #b7791f);
+            color: #111116;
+            font-weight: 800;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .persona-profile h2 {
+            font-size: 1.1rem;
+            color: var(--text-main);
+        }
+
+        .persona-profile span {
+            display: block;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .persona-block h3 {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .persona-block p {
+            font-size: 0.85rem;
+            color: var(--text-main);
+        }
+
+        /* Curva Emocional SVG */
+        .emotion-card {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 20px;
+            margin-bottom: 18px;
+        }
+
+        .emotion-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .emotion-svg {
+            width: 100%;
+            height: 115px;
+            display: block;
+        }
+
+        /* Matriz da Jornada (CSS Grid Alinhado) */
+        .journey-grid {
+            display: grid;
+            grid-template-columns: 155px repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .row-label {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+        }
+
+        .row-label.pain-label {
+            color: #fca5a5;
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        .row-label.opp-label {
+            color: #86efac;
+            border-color: rgba(34, 197, 94, 0.4);
+        }
+
+        .phase-banner {
+            grid-column: span 2;
+            text-align: center;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            color: #111116;
+        }
+
+        .phase-before {
+            background-color: #60a5fa;
+        }
+
+        .phase-during {
+            background-color: var(--accent);
+        }
+
+        .phase-after {
+            grid-column: span 1;
+            background-color: #4ade80;
+        }
+
+        .cell {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 0.83rem;
+        }
+
+        .stage-header {
+            background-color: var(--bg-card);
+            border-top: 3px solid var(--accent);
+        }
+
+        .stage-header.before {
+            border-top-color: #60a5fa;
+        }
+
+        .stage-header.after {
+            border-top-color: #4ade80;
+        }
+
+        .stage-num {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .stage-header strong {
+            font-size: 0.92rem;
+            color: var(--text-main);
+        }
+
+        .quote {
+            font-style: italic;
+            color: #fde68a;
+            background-color: rgba(229, 169, 60, 0.08);
+            border-left: 3px solid var(--accent);
+            padding: 8px 10px;
+        }
+
+        .touchpoint-tag {
+            display: inline-block;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 0.76rem;
+            margin: 2px 2px 2px 0;
+            color: #cbd5e1;
+        }
+
+        .pain-cell {
+            background-color: rgba(239, 68, 68, 0.08);
+            border-color: rgba(239, 68, 68, 0.35);
+            color: #fecaca;
+        }
+
+        .opp-cell {
+            background-color: rgba(34, 197, 94, 0.08);
+            border-color: rgba(34, 197, 94, 0.35);
+            color: #bbf7d0;
+        }
+
+        @media (max-width: 1100px) {
+            .persona-card {
+                grid-template-columns: 1fr;
+            }
+            .journey-grid {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Cabeçalho -->
+        <header class="header">
+            <div>
+                <span class="badge">DESIGN DE SERVIÇOS • MAPA DA JORNADA DO USUÁRIO</span>
+                <h1>GrooveManager Desktop App</h1>
+                <p>Experiência completa antes, durante e depois do uso • Orientação a Objetos (UnB FGA)</p>
+            </div>
+            <div style="text-align: right;">
+                <span style="font-size: 0.82rem; color: var(--text-muted);">Autor: <strong style="color: var(--text-main);">Pedro Alexandre</strong></span><br>
+                <span style="font-size: 0.8rem; color: var(--accent);">Foco: Colecionador de Mídias Físicas</span>
+            </div>
+        </header>
+
+        <!-- Persona -->
+        <section class="persona-card">
+            <div class="persona-profile">
+                <div class="avatar">LM</div>
+                <div>
+                    <h2>Lucas Mendes, 27 anos</h2>
+                    <span>Analista de Suporte de TI • Brasília - DF</span>
+                    <span style="color: var(--accent); font-weight: 600;">Acervo: ~140 itens (Vinil, CD e K7)</span>
+                </div>
+            </div>
+            <div class="persona-block">
+                <h3>Rotina, Motivações &amp; Objetivos</h3>
+                <p>Garimpa discos usados em sebos e feiras nos fins de semana. Busca saber exatamente quais prensagens já possui para evitar compras repetidas, acompanhar quanto investiu e manter o estado de conservação atualizado.</p>
+            </div>
+            <div class="persona-block">
+                <h3>Contexto &amp; Dores Prévias</h3>
+                <p>Antes do GrooveManager, anotava álbuns em notas soltas no celular e planilhas incompletas — já comprou CD repetido por esquecimento e perdia detalhes de ano e país de prensagem.</p>
+            </div>
+        </section>
+
+        <!-- Curva Emocional -->
+        <section class="emotion-card">
+            <div class="emotion-title">Curva Emocional ao Longo da Experiência</div>
+            <svg class="emotion-svg" viewBox="0 0 1200 115" preserveAspectRatio="none">
+                <!-- Linhas guia -->
+                <line x1="140" y1="22" x2="1150" y2="22" stroke="#2d2d3d" stroke-dasharray="4"/>
+                <line x1="140" y1="58" x2="1150" y2="58" stroke="#2d2d3d" stroke-dasharray="4"/>
+                <line x1="140" y1="92" x2="1150" y2="92" stroke="#2d2d3d" stroke-dasharray="4"/>
+
+                <text x="10" y="26" fill="#4ade80" font-size="12" font-weight="bold">Positivo (+)</text>
+                <text x="10" y="62" fill="#a6a6b8" font-size="12">Neutro (0)</text>
+                <text x="10" y="96" fill="#f87171" font-size="12" font-weight="bold">Tensão (-)</text>
+
+                <!-- Trajeto da curva -->
+                <path d="M 230 85 C 330 85, 360 62, 440 62 C 520 62, 560 32, 650 32 C 740 32, 780 26, 860 26 C 940 26, 990 18, 1080 18"
+                      fill="none" stroke="#e5a93c" stroke-width="3.5"/>
+
+                <!-- Pontos das 5 etapas -->
+                <circle cx="230" cy="85" r="7" fill="#60a5fa" stroke="#111116" stroke-width="2"/>
+                <text x="230" y="108" fill="#cbd5e1" font-size="12" text-anchor="middle">1. Curioso / Inseguro</text>
+
+                <circle cx="440" cy="62" r="7" fill="#60a5fa" stroke="#111116" stroke-width="2"/>
+                <text x="440" y="84" fill="#cbd5e1" font-size="12" text-anchor="middle">2. Motivado / Impaciente</text>
+
+                <circle cx="650" cy="32" r="7" fill="#e5a93c" stroke="#111116" stroke-width="2"/>
+                <text x="650" y="54" fill="#fde68a" font-size="12" font-weight="bold" text-anchor="middle">3. Aliviado / Satisfeito</text>
+
+                <circle cx="860" cy="26" r="7" fill="#e5a93c" stroke="#111116" stroke-width="2"/>
+                <text x="860" y="48" fill="#fde68a" font-size="12" font-weight="bold" text-anchor="middle">4. Confiante / Engajado</text>
+
+                <circle cx="1080" cy="18" r="7" fill="#4ade80" stroke="#111116" stroke-width="2"/>
+                <text x="1080" y="40" fill="#86efac" font-size="12" font-weight="bold" text-anchor="middle">5. Tranquilo / Realizado</text>
+            </svg>
+        </section>
+
+        <!-- Tabela Visual da Jornada -->
+        <section class="journey-grid">
+            <!-- Linha 0: Fases Macro -->
+            <div class="row-label" style="background: transparent; border: none;">Fases</div>
+            <div class="phase-banner phase-before">ANTES DO USO (Contexto Externo)</div>
+            <div class="phase-banner phase-during">DURANTE O USO (Interação com o Desktop App)</div>
+            <div class="phase-banner phase-after">DEPOIS DO USO</div>
+
+            <!-- Linha 1: Etapas -->
+            <div class="row-label">Etapas</div>
+            <div class="cell stage-header before">
+                <span class="stage-num">ETAPA 1</span>
+                <strong>Garimpo no sebo ou feira</strong>
+            </div>
+            <div class="cell stage-header before">
+                <span class="stage-num">ETAPA 2</span>
+                <strong>Chegada em casa e triagem</strong>
+            </div>
+            <div class="cell stage-header">
+                <span class="stage-num">ETAPA 3</span>
+                <strong>Consulta e cadastro da mídia</strong>
+            </div>
+            <div class="cell stage-header">
+                <span class="stage-num">ETAPA 4</span>
+                <strong>Ficha técnica, Wikipedia e edição</strong>
+            </div>
+            <div class="cell stage-header after">
+                <span class="stage-num">ETAPA 5</span>
+                <strong>Balanço e guarda no acervo</strong>
+            </div>
+
+            <!-- Linha 2: Ações -->
+            <div class="row-label">Ações do Usuário</div>
+            <div class="cell">Encontra um LP usado do <em>King Crimson</em> e um CD do <em>Milton Nascimento</em>; tenta lembrar se já tem aquela edição e avalia o preço da etiqueta.</div>
+            <div class="cell">Separa os discos na mesa, higieniza as capas, lê ano e país de prensagem no selo/encarte e liga o computador.</div>
+            <div class="cell">Abre o <strong>GrooveManager</strong>, filtra pelo artista na barra de busca para checar duplicidade e preenche o modal <strong>Cadastrar Mídia</strong>.</div>
+            <div class="cell">Abre a <strong>Ficha Técnica</strong> (duplo clique), consulta dados históricos na <strong>Wikipedia</strong> e atualiza a conservação de uma fita K7 do <em>Talking Heads</em>.</div>
+            <div class="cell">Confere no rodapé o total de mídias e valor investido, fecha o programa com dados salvos e organiza os itens na estante.</div>
+
+            <!-- Linha 3: Pontos de Contato -->
+            <div class="row-label">Pontos de Contato</div>
+            <div class="cell">
+                <span class="touchpoint-tag">Sebo / Loja física</span>
+                <span class="touchpoint-tag">Etiqueta de preço</span>
+                <span class="touchpoint-tag">Notas do celular</span>
+            </div>
+            <div class="cell">
+                <span class="touchpoint-tag">Capa e selo do disco</span>
+                <span class="touchpoint-tag">Encarte</span>
+                <span class="touchpoint-tag">PC Desktop</span>
+            </div>
+            <div class="cell">
+                <span class="touchpoint-tag">Tabela Treeview</span>
+                <span class="touchpoint-tag">Filtro em tempo real</span>
+                <span class="touchpoint-tag">Modal Cadastro</span>
+            </div>
+            <div class="cell">
+                <span class="touchpoint-tag">Modal Ficha Técnica</span>
+                <span class="touchpoint-tag">Navegador (Wikipedia)</span>
+                <span class="touchpoint-tag">Modal Editar / Artistas</span>
+            </div>
+            <div class="cell">
+                <span class="touchpoint-tag">Rodapé de status</span>
+                <span class="touchpoint-tag">SQLite (groovemanager.db)</span>
+                <span class="touchpoint-tag">Estante física</span>
+            </div>
+
+            <!-- Linha 4: Pensamentos -->
+            <div class="row-label">Pensamentos</div>
+            <div class="cell quote">"Será que eu já tenho essa prensagem na coleção? R$ 220 está justo para esse LP?"</div>
+            <div class="cell quote">"Preciso cadastrar logo antes de misturar na estante e esquecer quanto paguei."</div>
+            <div class="cell quote">"Boa! Ao digitar 'King Crimson', ele já puxou 'Inglaterra' sozinho e bloqueou o campo sem duplicar o artista."</div>
+            <div class="cell quote">"Vou conferir na Wikipedia o ano exato dessa tiragem e já atualizar o status da fita que limpei."</div>
+            <div class="cell quote">"Agora tenho controle real do meu acervo e quanto investi sem depender de planilhas."</div>
+
+            <!-- Linha 5: Barreiras -->
+            <div class="row-label pain-label">Barreiras &amp; Frustrações</div>
+            <div class="cell pain-cell">Como o software é Desktop local, <strong>não consegue consultar o acervo na rua</strong> durante a compra no sebo.</div>
+            <div class="cell pain-cell">Digitação 100% manual de todos os campos lendo letras pequenas na contracapa.</div>
+            <div class="cell pain-cell">Não permite anexar foto da capa ou do selo da prensagem no momento do cadastro.</div>
+            <div class="cell pain-cell">O botão da Wikipedia abre busca genérica no navegador em vez de puxar metadados diretos de catálogo.</div>
+            <div class="cell pain-cell">Ausência de gráficos visuais (gastos por período, proporção Vinil/CD/K7) e backup em nuvem.</div>
+
+            <!-- Linha 6: Oportunidades -->
+            <div class="row-label opp-label">Oportunidades de Melhoria</div>
+            <div class="cell opp-cell">Desenvolver versão <strong>Web / Mobile (BMVC)</strong> para consulta rápida direto do celular na loja.</div>
+            <div class="cell opp-cell">Integrar leitura de código de barras ou autopreenchimento via <strong>API do Discogs</strong>.</div>
+            <div class="cell opp-cell">Adicionar campo de upload/visualização da imagem da capa na ficha da mídia.</div>
+            <div class="cell opp-cell">Exibir resumo de tiragens e histórico de preços diretamente na janela de Ficha Técnica.</div>
+            <div class="cell opp-cell">Criar painel estatístico de valorização do acervo e exportação de relatório em PDF/CSV.</div>
+        </section>
+    </div>
+</body>
+</html>
